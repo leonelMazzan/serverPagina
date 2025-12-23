@@ -9,19 +9,24 @@ const port = 3000;
 
 app.use(compression());
 
+// API routes - deben ir antes del catch-all
 app.get("/api", (req, res)=>{
   return res.status(200).json({
     ok: true,
     message: {
-        message:'Todo cheto'
+        message:'No API'
     }
 });
 })
 
-app.use(express.static(__dirname + "/public"));
+// Servir archivos estáticos (CSS, JS, imágenes, etc.)
+app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/*", function (req, res) {
-  res.sendFile(path.join(__dirname + "/public/index.html"));
+// Catch-all handler: sirve index.html para todas las rutas que no sean archivos estáticos o API
+// Esto permite que React Router maneje el enrutamiento en el cliente
+// IMPORTANTE: Debe ir al final, después de todas las demás rutas
+app.get("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 app.listen(port, () => {
